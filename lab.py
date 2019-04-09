@@ -275,7 +275,7 @@ class CompactGraph(Graph):
             new_key = list(special_key)
             new_key.remove(name)
             new_key = tuple(new_key)
-            self.adj_dict[new_key] = special_val
+            self.adj_dict[new_key] = special_value
             del self.adj_dict[special_key]
         else:
             raise LookupError
@@ -288,8 +288,9 @@ class CompactGraph(Graph):
             if start in key:
                 start_bool = True
                 start_key = key
-                if end in self.adj_dict[key]:
+                if end in val:
                     raise ValueError
+                value = val
             if end in key:
                 end_bool = True
         if start_bool and end_bool:
@@ -301,9 +302,9 @@ class CompactGraph(Graph):
         new_key.remove(start)
         new_key = tuple(new_key)
         del self.adj_list[start_key]
-        self.adj_list[new_key] = val
+        self.adj_list[new_key] = value
         
-        new_val = list(set(val.append(end)))
+        new_val = list(set(value.append(end)))
         key2_in_vals = False
         special_key = None
         for key2, val2 in self.adj_dict.items():
@@ -375,7 +376,7 @@ def nested_deep_copy(list_of_tups):
     
 def duplicate(pattern):
     dup_pattern = nested_deep_copy(pattern)
-    return dub_pattern
+    return dup_pattern
 
 def edge_insert(pattern):
     for i in range(len(pattern)):
