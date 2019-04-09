@@ -411,11 +411,16 @@ def get_paths(list_of_lists, prev):
         elements = new_elements
     new_lists = []
     for l in prev:
-        for elem in elements:
-            m = l
-            elem = elem
-            m.extend([elem])
-            new_lists.append(m)
+        if elements != []:
+            for elem in elements:
+                m = l.copy()
+                m.extend([elem])
+                new_lists.append(m)
+        else:
+            for elem in [[]]:
+                m = l.copy()
+                m.extend([elem])
+                new_lists.append(m)
     if len(list_of_lists) > 1: #recrusive step
         return get_paths(list_of_lists[1:], new_lists)
     else: #base case, no more permutations to create
