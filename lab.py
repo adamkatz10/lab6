@@ -138,6 +138,8 @@ class SimpleGraph(Graph):
         if name not in self.adj_dict.keys(): #new node
             self.adj_dict[name] = [] 
             self.names[name] = label if label != '' else None #map name to its label in names
+        else:
+            raise ValueError
         if label != '':
             if label not in self.labels.keys(): #new label
                 self.labels[label] = [name]
@@ -230,6 +232,7 @@ class CompactGraph(Graph):
         
     def add_node(self, name, label=''):
         """Add a node with name `name` and label `label`."""
+        
         if label != '':
             if label not in self.labels.keys(): #new label
                 self.labels[label] = [name]
