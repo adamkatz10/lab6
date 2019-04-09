@@ -151,24 +151,31 @@ class SimpleGraph(Graph):
         try:
             del self.adj_dict[name] #remove node from adj_list      
         except:
-            pass
+            raise LookupError
         try:
             self.labels[self.names[name]].remove(name) #remove the value from labels
         except:
-            pass
-        del self.names[name] #remove node from names
+            raise LookupError
+        try:    
+            del self.names[name] #remove node from names
+        except:
+            raise LookupError
 
     def add_edge(self, start, end):
         """Add a edge from `start` to `end`."""
         if start in self.adj_dict.keys() and end in self.adj_dict.keys(): #if valid keys
+            if end in self.adj_dict[start]:
+                raise ValueError
             self.adj_dict[start].extend([end]) #add end as a value to start in the adj_dict
+        else:
+            raise LookupError
 
     def remove_edge(self, start, end):
         """Remove the edge from `start` to `end`."""
         try:
             self.adj_dict[start].remove(end) #remove the edge between start and end
         except: #there's an error
-            pass
+            raise LookupError
 
 class CompactGraph(Graph):
     """Graph optimized for cases where many nodes have the same neighbors."""
@@ -256,50 +263,82 @@ class CompactGraph(Graph):
 
     def remove_node(self, name):
         """Remove the node with name `name`."""
+        node_bool = False
         for key,val in self.adj_dict.items():
             if name in key:
-                new_key = list(key)
-                new_key.remove(name)
-                new_key = tuple(new_key)
-                self.adj_dict[new_key] = val
-                del self.adj_dict[key]
+                node_bool = True
+                special_key = key
+                special_value = val
+                
+        if node_bool:
+            new_key = list(special_key)
+            new_key.remove(name)
+            new_key = tuple(new_key)
+            self.adj_dict[new_key] = special_val
+            del self.adj_dict[special_key]
+        else:
+            raise LookupError
 
     def add_edge(self, start, end):
         """Add a edge from `start` to `end`."""
+        start_bool = False
+        end_bool = False
         for key, val in self.adj_dict.items():
             if start in key:
-                new_key = list(key)
-                new_key.remove(start)
-                new_key = tuple(new_key)
-                del self.adj_list[key]
-                self.adj_list[new_key] = val
-                
-                new_val = list(set(val.append(end)))
-                key2_in_vals = False
-                special_key = None
-                for key2, val2 in self.adj_dict.items():
-                    if val2 == new_val:
-                        key2_in_vals = True
-                        special_key = key2
-                
-                if key2_in_vals:
-                    new_key2 = list(special_key)
-                    new_key2.extend([start])
-                    new_key2 = tuple(new_key2)
-                    del self.adj_dict[special_key]
-                    self.adj_dict[new_key] = new_val
-                else:
-                    self.adj_dict[(start,)] = new_val
+                start_bool = True
+                start_key = key
+                if end in self.adj_dict[key]:
+                    raise ValueError
+            if end in key:
+                end_bool = True
+        if start_bool and end_bool:
+            pass
+        else:
+            raise LookupError
+        
+        new_key = list(start_key)
+        new_key.remove(start)
+        new_key = tuple(new_key)
+        del self.adj_list[start_key]
+        self.adj_list[new_key] = val
+        
+        new_val = list(set(val.append(end)))
+        key2_in_vals = False
+        special_key = None
+        for key2, val2 in self.adj_dict.items():
+            if val2 == new_val:
+                key2_in_vals = True
+                special_key = key2
+        
+        if key2_in_vals:
+            new_key2 = list(special_key)
+            new_key2.extend([start])
+            new_key2 = tuple(new_key2)
+            del self.adj_dict[special_key]
+            self.adj_dict[new_key] = new_val
+        else:
+            self.adj_dict[(start,)] = new_val
 
     def remove_edge(self, start, end):
         """Remove the edge from `start` to `end`."""
+        start_bool = False
+        end_edge_bool = False
         for key,val in self.adj_dict.items():
-            if start in key and end in val:
-                del self.adj_dict[key]
-                new_key = list(key)
-                new_key.remove(start)
-                new_key = tuple(new_key)
-                self.adj_dict[new_key] = val
+            if start in key:
+                start_bool = True
+                if end not in val: #I don't check to see if end exists, I think this is good enough
+                    raise LookupError
+                else:
+                    end_edge_bool = True
+                  special_key = key
+                  special_val = val
+            
+        if start_bool and end_edge_bool:
+            del self.adj_dict[special_key]
+            new_key = list(special_key)
+            new_key.remove(start)
+            new_key = tuple(new_key)
+            self.adj_dict[new_key] = special_val
                 
                 
 
