@@ -151,11 +151,11 @@ class SimpleGraph(Graph):
         try:
             del self.adj_dict[name] #remove node from adj_list      
         except:
-            pass
+            raise LookupError
         try:
             self.labels[self.names[name]].remove(name) #remove the value from labels
         except:
-            pass
+            raise LookupError
         del self.names[name] #remove node from names
 
     def add_edge(self, start, end):
