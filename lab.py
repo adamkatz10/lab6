@@ -232,6 +232,10 @@ class CompactGraph(Graph):
         
     def add_node(self, name, label=''):
         """Add a node with name `name` and label `label`."""
+        for keys in self.adj_dict.keys():
+            for key in keys:
+                if key == name:
+                    raise KeyError
         
         if label != '':
             if label not in self.labels.keys(): #new label
