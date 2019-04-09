@@ -155,7 +155,7 @@ class SimpleGraph(Graph):
         try:
             self.labels[self.names[name]].remove(name) #remove the value from labels
         except:
-            raise LookupError
+            pass
         try:    
             del self.names[name] #remove node from names
         except:
