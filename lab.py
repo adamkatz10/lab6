@@ -100,12 +100,19 @@ class SimpleGraph(Graph):
         #representing node's label's
         
         def label_insert(label):
-            if label != "*":
-                return self.labels[label]
+            if self.labels != {}:
+                if label != "*":
+                    return self.labels[label]
+                else:
+                    return_list = []
+                    for l in self.labels.keys():
+                        return_list.extend(self.labels[l])
+                    return return_list
             else:
                 return_list = []
-                for l in self.labels.keys():
-                    return_list.extend(self.labels[l])
+                for key in self.adj_dict.keys():
+                    return_list.append(key)
+                return_list = list(set(return_list))
                 return return_list
             
         def valid_path(path):
@@ -201,12 +208,20 @@ class CompactGraph(Graph):
 
         """
         def label_insert(label):
-            if label != "*":
-                return self.labels[label]
+            if self.labels != {}:
+                if label != "*":
+                    return self.labels[label]
+                else:
+                    return_list = []
+                    for l in self.labels.keys():
+                        return_list.extend(self.labels[l])
+                    return return_list
             else:
                 return_list = []
-                for l in self.labels.keys():
-                    return_list.extend(self.labels[l])
+                for key in self.adj_dict.keys():
+                    for k in key:
+                        return_list.append(k)
+                return_list = list(set(return_list))
                 return return_list
 
         def valid_path(path):
@@ -391,7 +406,7 @@ def edge_insert(pattern):
 def get_paths(list_of_lists, prev):
     #prev is a list of lists
     elements = list_of_lists[0]
-    if type(elements[0]) == list and len(elements) > 1: #if elements is a list of lists
+    if elements != [] and type(elements[0]) == list and len(elements) > 1: #if elements is a list of lists
         new_elements = get_paths(elements, [[]])
         elements = new_elements
     new_lists = []
