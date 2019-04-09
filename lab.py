@@ -156,10 +156,14 @@ class SimpleGraph(Graph):
             self.labels[self.names[name]].remove(name) #remove the value from labels
         except:
             raise LookupError
+<<<<<<< HEAD
         try:    
             del self.names[name] #remove node from names
         except:
             raise LookupError
+=======
+        del self.names[name] #remove node from names
+>>>>>>> b3372f070b4cebcaa11e78fb35a6d291ca7e329e
 
     def add_edge(self, start, end):
         """Add a edge from `start` to `end`."""
